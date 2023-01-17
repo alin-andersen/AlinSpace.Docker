@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Copyright>Copyright © 2023 Alin Andersen</Copyright>
+    <PackageTags>alinspace; alin; space; docker</PackageTags>
+    <RepositoryUrl>https://github.com/onixion/AlinSpace.Docker</RepositoryUrl>
+    <Version>1.0.2</Version>
+    <PackageIcon>Icon.png</PackageIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AlinSpace.ConsoleHelper" Version="1.0.2" />
+    <PackageReference Include="AlinSpace.Exceptions" Version="6.8.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

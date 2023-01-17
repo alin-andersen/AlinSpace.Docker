@@ -1,0 +1,17 @@
+{
+    "PathToSolutionFile": "AlinSpace.Docker.sln",
+    "PathToLocalNugetFolder": "C:\\AlinSpace\\Nuget",
+    "PathToDebugFiles": "C:\\AlinSpace\\Pdbs",
+    "BuildInDebugConfiguration": true,
+    "Author": "Alin Andersen",
+    "Copyright": "Copyright © 2023 Alin Andersen",
+    "RepositoryUrl": "https://github.com/onixion/AlinSpace.Docker",
+    "ProjectUrl": "https://github.com/onixion/AlinSpace.Docker",
+    "Tags": "alinspace; alin; space; docker;",
+    "Projects": [
+      {
+        "Name": "AlinSpace.Docker",
+        "Tags": ""
+      }
+    ]
+  }
