@@ -8,8 +8,8 @@ on:
 
 jobs:
 
-  AlinSpace_ConsoleHelper:
-    name: AlinSpace.docker
+  AlinSpace_Docker:
+    name: AlinSpace.Docker
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -18,10 +18,10 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore
-      run: dotnet restore AlinSpace.docker/AlinSpace.docker.csproj
+      run: dotnet restore AlinSpace.Docker/AlinSpace.Docker.csproj
     - name: Building
-      run: dotnet build AlinSpace.docker/AlinSpace.docker.csproj --no-restore -c Release
+      run: dotnet build AlinSpace.Docker/AlinSpace.Docker.csproj --no-restore -c Release
     - name: Pack
-      run: dotnet pack AlinSpace.docker/AlinSpace.docker.csproj -c Release -o . 
+      run: dotnet pack AlinSpace.Docker/AlinSpace.Docker.csproj -c Release -o . 
     - name: Publish
-      run: dotnet nuget push AlinSpace.docker.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push AlinSpace.Docker.*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
