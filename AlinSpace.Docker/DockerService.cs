@@ -8,6 +8,27 @@ namespace AlinSpace.Docker
     {
         public static IDockerService Instance { get; } = new DockerService();
 
+        public async Task LoginAsync(string username, string password, string server)
+        {
+            if (string.IsNullOrWhiteSpace(server))
+            {
+                server = "registry-1.docker.io";
+            }
+
+            var command = $"docker login --username {username} --password {password} {server}";
+            ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
+            await CommandLineInterface.ExecuteAsync(command);
+            ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
+        }
+
+        public async Task LogoutAsync()
+        {
+            var command = $"docker logout";
+            ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
+            await CommandLineInterface.ExecuteAsync(command);
+            ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
+        }
+
         public async Task CreateAndStartContainersAsync(IEnumerable<Container> containers)
         {
             foreach(var container in containers)

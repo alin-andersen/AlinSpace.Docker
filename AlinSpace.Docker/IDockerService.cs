@@ -6,6 +6,19 @@
     public interface IDockerService
     {
         /// <summary>
+        /// Login asynchronously.
+        /// </summary>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
+        /// <param name="server">Server.</param>
+        Task LoginAsync(string username, string password, string server);
+
+        /// <summary>
+        /// Logout asynchronously.
+        /// </summary>
+        Task LogoutAsync();
+
+        /// <summary>
         /// Creates and starts the given containers asynchronously.
         /// </summary>
         /// <param name="containers">Enumerable of containers.</param>
