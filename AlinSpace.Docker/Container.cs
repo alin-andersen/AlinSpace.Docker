@@ -1,6 +1,6 @@
 ﻿namespace AlinSpace.Docker
 {
-    public class Container
+    public class ContainerInfo
     {
         public string Name { get; set; }
 
@@ -14,11 +14,11 @@
 
         public IList<BindMount> BindMounts { get; set; }
 
-        public Container()
+        public ContainerInfo()
         {
         }
 
-        public Container(
+        public ContainerInfo(
             string name, 
             string image, 
             string tag = null,

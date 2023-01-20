@@ -4,9 +4,9 @@
     {
         static void Main(string[] args)
         {
-            var containers = new List<Container>
+            var containers = new List<ContainerInfo>
             {
-                new Container(
+                new ContainerInfo(
                     "mysql",
                     "mysql",
                     "latest",

@@ -1,5 +1,4 @@
 ﻿using AlinSpace.ConsoleHelper;
-using AlinSpace.Exceptions;
 using System.Text;
 
 namespace AlinSpace.Docker
@@ -15,78 +14,37 @@ namespace AlinSpace.Docker
                 server = "registry-1.docker.io";
             }
 
-            var command = $"docker login --username {username} --password {password} {server}";
-            ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
+            var command = $"docker login {server} --username {username} --password {password}";
             await CommandLineInterface.ExecuteAsync(command);
-            ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
         }
 
         public async Task LogoutAsync()
         {
             var command = $"docker logout";
-            ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
             await CommandLineInterface.ExecuteAsync(command);
-            ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
         }
 
-        public async Task CreateAndStartContainersAsync(IEnumerable<Container> containers)
+        public async Task CreateContainerAsync(ContainerInfo containerInfo)
         {
-            foreach(var container in containers)
-            {
-                ConsoleWriter.WriteLineWithPrefix($"Working on container for {container.Name} ...", "⬤", ConsoleColor.DarkYellow);
-
-                // Stop container.
-                var command = $"docker stop {container.Name}";
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
-                await Try.CatchIgnoreAsync(() => CommandLineInterface.ExecuteAsync(command));
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
-
-                // Delete container.
-                command = $"docker rm {container.Name}";
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
-                await Try.CatchIgnoreAsync(() => CommandLineInterface.ExecuteAsync(command));
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
-
-                // Create container.
-                command = GetCreateContainerCommand(container);
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
-                await CommandLineInterface.ExecuteAsync(command);
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
-
-                // Start container.
-                command = $"docker start {container.Name}";
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
-                await CommandLineInterface.ExecuteAsync(command);
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
-            }
+            await CommandLineInterface.ExecuteAsync(GetCreateContainerCommand(containerInfo));
         }
 
-        public async Task StopAndRemoveContainersAsync(IEnumerable<Container> containers)
+        public async Task StartContainerAsync(ContainerInfo containerInfo)
         {
-            foreach (var container in containers)
-            {
-                ConsoleWriter.WriteLineWithPrefix($"Working on container for {container.Name} ...", "⬤", ConsoleColor.DarkYellow);
-
-                // Stop container.
-                var command = $"docker stop {container.Name}";
-                await Try.CatchIgnoreAsync(() => CommandLineInterface.ExecuteAsync(command));
-                await CommandLineInterface.ExecuteAsync(command);
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
-
-                // Delete container.
-                command = $"docker rm {container.Name}";
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "~", ConsoleColor.Yellow);
-                await Try.CatchIgnoreAsync(() => CommandLineInterface.ExecuteAsync(command));
-                ConsoleWriter.WriteLineWithPrefix($"→ {command}", "OK", ConsoleColor.Green);
-            }
+            await CommandLineInterface.ExecuteAsync($"docker container start {containerInfo.Name}");
         }
 
-        public Task StopAndRemoveAllContainers()
+        public async Task StopContainerAsync(ContainerInfo containerInfo)
         {
-            throw new NotImplementedException();
+            await CommandLineInterface.ExecuteAsync($"docker container stop {containerInfo.Name}");
         }
 
-        private string GetCreateContainerCommand(Container container)
+        public async Task RemoveContainerAsync(ContainerInfo containerInfo)
+        {
+            await CommandLineInterface.ExecuteAsync($"docker container rm {containerInfo.Name}");
+        }
+
+        public string GetCreateContainerCommand(ContainerInfo container)
         {
             var commandBuilder = new StringBuilder();
 
@@ -107,9 +65,12 @@ namespace AlinSpace.Docker
             {
                 var hostPath = bindMount.HostPath;
 
+                if (string.IsNullOrWhiteSpace(bindMount.Type))
+                    throw new Exception("Bind mount type not specified.");
+
                 if (hostPath.Contains('\\') || hostPath.Contains(' '))
                 {
-                    hostPath = $"{@""""}{hostPath}{@""""}";
+                    hostPath = $"\"{hostPath}\"";
                 }
 
                 var containerPath = bindMount.ContainerPath;
@@ -128,12 +89,28 @@ namespace AlinSpace.Docker
 
             foreach (var portMapping in container.PortMappings)
             {
+                if (portMapping.HostPort < 1)
+                    throw new Exception("Invalid host port.");
+
+                if (portMapping.ContainerPort < 1)
+                    throw new Exception("Invalid container port.");
+
                 commandBuilder.Append($"-p {portMapping.HostPort}:{portMapping.ContainerPort} ");
             }
 
             #endregion
 
-            commandBuilder.Append($"{container.Image}:{container.Tag}");
+            if (string.IsNullOrWhiteSpace(container.Image))
+                throw new Exception("Container image not specified.");
+
+            var tag = container.Tag;
+
+            if (string.IsNullOrWhiteSpace(tag))
+            {
+                tag = "latest";
+            }
+
+            commandBuilder.Append($"{container.Image}:{tag}");
 
             var command = commandBuilder.ToString().Trim();
 

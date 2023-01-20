@@ -11,7 +11,7 @@
         /// <param name="username">Username.</param>
         /// <param name="password">Password.</param>
         /// <param name="server">Server.</param>
-        Task LoginAsync(string username, string password, string server);
+        Task LoginAsync(string username, string password, string server = null);
 
         /// <summary>
         /// Logout asynchronously.
@@ -19,24 +19,27 @@
         Task LogoutAsync();
 
         /// <summary>
-        /// Creates and starts the given containers asynchronously.
+        /// Creates the contaienr asynchronously.
         /// </summary>
-        /// <param name="containers">Enumerable of containers.</param>
-        /// <remarks>
-        /// Note: If the containers already exists, they will be stopped, removed, created and then started.
-        /// Note: If you use the tag "latest", you will get the latest version every time. This might not be what is wanted. Use the exact version instead.
-        /// </remarks>
-        Task CreateAndStartContainersAsync(IEnumerable<Container> containers);
+        /// <param name="containerInfo">Container info.</param>
+        Task CreateContainerAsync(ContainerInfo containerInfo);
 
         /// <summary>
-        /// Stops and removes the given containers asynchronously.
+        /// Starts the contaienr asynchronously.
         /// </summary>
-        /// <param name="containers">Enumerable of containers.</param>
-        Task StopAndRemoveContainersAsync(IEnumerable<Container> containers);
+        /// <param name="containerInfo">Container info.</param>
+        Task StartContainerAsync(ContainerInfo containerInfo);
 
         /// <summary>
-        /// Stops and removes all containers asynchronously.
+        /// Stops the contaienr asynchronously.
         /// </summary>
-        Task StopAndRemoveAllContainers();
+        /// <param name="containerInfo">Container info.</param>
+        Task StopContainerAsync(ContainerInfo containerInfo);
+
+        /// <summary>
+        /// Removes the contaienr asynchronously.
+        /// </summary>
+        /// <param name="containerInfo">Container info.</param>
+        Task RemoveContainerAsync(ContainerInfo containerInfo);
     }
 }
