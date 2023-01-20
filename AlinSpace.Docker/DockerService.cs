@@ -44,15 +44,15 @@ namespace AlinSpace.Docker
             await CommandLineInterface.ExecuteAsync($"docker container rm {containerInfo.Name}");
         }
 
-        public string GetCreateContainerCommand(ContainerInfo container)
+        public string GetCreateContainerCommand(ContainerInfo containerInfo)
         {
             var commandBuilder = new StringBuilder();
 
-            commandBuilder.Append($"docker create --name {container.Name} ");
+            commandBuilder.Append($"docker create --name {containerInfo.Name} ");
 
             #region Environment Variables
 
-            foreach(var enviornmentVariable in container.EnvironmentVariables)
+            foreach(var enviornmentVariable in containerInfo?.EnvironmentVariables ?? Enumerable.Empty<EnvironmentVariable>())
             {
                 commandBuilder.Append($"-e {enviornmentVariable.Key}={enviornmentVariable.Value} ");
             }
@@ -61,7 +61,7 @@ namespace AlinSpace.Docker
 
             #region Bind Mounts
 
-            foreach (var bindMount in container.BindMounts)
+            foreach (var bindMount in containerInfo.BindMounts ?? Enumerable.Empty<BindMount>())
             {
                 var hostPath = bindMount.HostPath;
 
@@ -87,7 +87,7 @@ namespace AlinSpace.Docker
 
             #region Port Mappings
 
-            foreach (var portMapping in container.PortMappings)
+            foreach (var portMapping in containerInfo.PortMappings ?? Enumerable.Empty<PortMapping>())
             {
                 if (portMapping.HostPort < 1)
                     throw new Exception("Invalid host port.");
@@ -100,17 +100,17 @@ namespace AlinSpace.Docker
 
             #endregion
 
-            if (string.IsNullOrWhiteSpace(container.Image))
+            if (string.IsNullOrWhiteSpace(containerInfo.Image))
                 throw new Exception("Container image not specified.");
 
-            var tag = container.Tag;
+            var tag = containerInfo.Tag;
 
             if (string.IsNullOrWhiteSpace(tag))
             {
                 tag = "latest";
             }
 
-            commandBuilder.Append($"{container.Image}:{tag}");
+            commandBuilder.Append($"{containerInfo.Image}:{tag}");
 
             var command = commandBuilder.ToString().Trim();
 

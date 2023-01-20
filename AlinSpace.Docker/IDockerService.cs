@@ -41,5 +41,12 @@
         /// </summary>
         /// <param name="containerInfo">Container info.</param>
         Task RemoveContainerAsync(ContainerInfo containerInfo);
+
+        /// <summary>
+        /// Gets the create container command.
+        /// </summary>
+        /// <param name="containerInfo">Container info.</param>
+        /// <returns>Create container command.</returns>
+        string GetCreateContainerCommand(ContainerInfo containerInfo);
     }
 }
