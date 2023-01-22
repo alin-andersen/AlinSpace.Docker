@@ -8,11 +8,11 @@
 
         public string Tag { get; set; }
 
-        public IList<EnvironmentVariable> EnvironmentVariables { get; set; }
+        public IList<EnvironmentVariable> EnvironmentVariables { get; set; } = new List<EnvironmentVariable>();
 
-        public IList<PortMapping> PortMappings { get; set; }
+        public IList<PortMapping> PortMappings { get; set; } = new List<PortMapping>();
 
-        public IList<BindMount> BindMounts { get; set; }
+        public IList<BindMount> BindMounts { get; set; } = new List<BindMount>();
 
         public ContainerInfo()
         {
