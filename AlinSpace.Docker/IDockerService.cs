@@ -48,5 +48,11 @@
         /// <param name="containerInfo">Container info.</param>
         /// <returns>Create container command.</returns>
         string GetCreateContainerCommand(ContainerInfo containerInfo);
+
+        /// <summary>
+        /// Executes command on container asynchronously.
+        /// </summary>
+        /// <param name="command">Command.</param>
+        Task ExecuteCommandOnContainer(string containerName, string command);
     }
 }

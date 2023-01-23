@@ -14,6 +14,8 @@
 
         public IList<BindMount> BindMounts { get; set; } = new List<BindMount>();
 
+        public bool AutoRestart { get; set; } = true;
+
         public ContainerInfo()
         {
         }
@@ -24,7 +26,8 @@
             string tag = null,
             IEnumerable<EnvironmentVariable> environmentVariables = null,
             IEnumerable<PortMapping> portMappings = null, 
-            IEnumerable<BindMount> bindMounts = null)
+            IEnumerable<BindMount> bindMounts = null,
+            bool autoRestart = true)
         {
             Name = name;
             Image = image;
@@ -32,6 +35,7 @@
             EnvironmentVariables = environmentVariables?.ToList() ?? new List<EnvironmentVariable>();
             PortMappings = portMappings?.ToList() ?? new List<PortMapping>();
             BindMounts = bindMounts?.ToList() ?? new List<BindMount>();
+            AutoRestart = autoRestart;
         }
     }
 }

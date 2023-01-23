@@ -59,6 +59,11 @@ namespace AlinSpace.Docker
 
             #endregion
 
+            if (containerInfo.AutoRestart)
+            {
+                commandBuilder.Append($"--restart always ");
+            }
+
             #region Bind Mounts
 
             foreach (var bindMount in containerInfo.BindMounts ?? Enumerable.Empty<BindMount>())
@@ -115,6 +120,11 @@ namespace AlinSpace.Docker
             var command = commandBuilder.ToString().Trim();
 
             return command;
+        }
+
+        public async Task ExecuteCommandOnContainer(string containerName, string command)
+        {
+            await CommandLineInterface.ExecuteAsync($"docker exec {containerName} sh -c '{command}'");
         }
     }
 }

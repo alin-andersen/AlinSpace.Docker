@@ -6,7 +6,7 @@
     <Copyright>Copyright © 2023 Alin Andersen</Copyright>
     <PackageTags>alinspace; alin; space; docker</PackageTags>
     <RepositoryUrl>https://github.com/onixion/AlinSpace.Docker</RepositoryUrl>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <PackageIcon>Icon.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
